@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 
 class RegisterPageViewController: UIViewController {
+    
 
     @IBOutlet weak var userEmailTextField: UITextField!
     @IBOutlet weak var userPasswordTextField: UITextField!
@@ -52,6 +53,7 @@ class RegisterPageViewController: UIViewController {
             displayMyAlertMessage(userMessage: "Passwords do not match.");
             return;
         }
+        
         // Store Data
         Auth.auth().createUser(withEmail: userEmail!, password: userPassword!, completion: {(user, error ) in
             if (error != nil) { print(error!) }
