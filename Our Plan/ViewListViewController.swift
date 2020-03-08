@@ -136,7 +136,7 @@ class ViewListViewController: UIViewController, UITableViewDelegate, UITableView
         guard var inputItem = addItem.text, !inputItem.isEmpty else { return }
 
         let db = Firestore.firestore()
-        let newDocument = db.collection("stores").document("82sPUkwkDF0f7Gf6d9Zx")
+        let newDocument = db.collection("stores").document(finalLabel)
         newDocument.setData(["item": inputItem], merge: true)
         inputItem = ""
     }
