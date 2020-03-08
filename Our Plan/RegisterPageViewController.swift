@@ -13,6 +13,7 @@ class RegisterPageViewController: UIViewController {
     
 
     @IBOutlet weak var userEmailTextField: UITextField!
+    @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var userPasswordTextField: UITextField!
     @IBOutlet weak var repeatPasswordTextField: UITextField!
     
@@ -35,13 +36,35 @@ class RegisterPageViewController: UIViewController {
         self.present(myAlert, animated: true, completion: nil);
     }
     
+    // check the fields and validate the data is correct. If correct, method returns nil otherwise returns string.
+    func validateFields() -> String? {
+        
+        if userEmailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
+            
+            firstNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
+            userPasswordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            return "Please fill in all fields"
+        }
+        
+        // check if password is secure
+        let cleanedPassword = userPasswordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if Utilities.isPasswordValid(cleanedPassword) == false {
+            // maybe needs to use function displayMyAlertMessage here.
+            return "Please make sure your password is at least 8 characters, contains a special character and a number"
+        }
+        
+        return nil
+    }
+    
     @IBAction func registerButtonTapped(_ sender: Any) {
-        let userEmail = userEmailTextField.text;
-        let userPassword = userPasswordTextField.text;
-        let repeatPassword = repeatPasswordTextField.text;
+        let firstName = firstNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let userEmail = userEmailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let userPassword = userPasswordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let repeatPassword = repeatPasswordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         // Check fields to make sure they are not empty
-        if ((userEmail?.isEmpty)! || (userPassword?.isEmpty)! || (repeatPassword?.isEmpty)!) {
+        if ((userEmail?.isEmpty)! || (userPassword?.isEmpty)! || (repeatPassword?.isEmpty)! || (firstName?.isEmpty)!) {
             // Display message to user a field is empty
             displayMyAlertMessage(userMessage: "All fields are required");
             return;
@@ -58,7 +81,18 @@ class RegisterPageViewController: UIViewController {
         Auth.auth().createUser(withEmail: userEmail!, password: userPassword!, completion: {(user, error ) in
             if (error != nil) { print(error!) }
             else {
+                let db = Firestore.firestore()
+                
+                db.collection("users").addDocument(data: ["firstname": firstName!,"uid": user!.user.uid], completion: { (error) in
+                    
+                    if error != nil {
+                        print("Error saving user data")
+                    }
+                })
                 print("Registration Successful")
+                
+//                // transition to home screen
+//                transitionToHome()
                 }
             } )
         
@@ -77,6 +111,11 @@ class RegisterPageViewController: UIViewController {
         
         
     }
+    
+//    func transitionToHome() {
+//
+//        storyboard?.instantiateViewController(withIdentifier: Constants.Storyboard.homeViewController)
+//    }
     
     
 }

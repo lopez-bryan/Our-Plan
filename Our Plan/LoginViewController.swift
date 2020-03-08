@@ -17,7 +17,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
     }
 
@@ -28,8 +28,11 @@ class LoginViewController: UIViewController {
 
     
     @IBAction func loginButtonPressed(_ sender: Any) {
+        // userEmailTextField.text!
+        // userPasswordTextField.text!
         
-        Auth.auth().signIn(withEmail: userEmailTextField.text!, password: userPasswordTextField.text!) { (user, error) in
+        
+        Auth.auth().signIn(withEmail: "claire@gmail.com", password: "Claire12345!" ) { (user, error) in
                 if error == nil{
                     print("Login Successful")
                     self.performSegue(withIdentifier: "loginGoToMain", sender: self)

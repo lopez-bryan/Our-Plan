@@ -14,18 +14,24 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
         // Do any additional setup after loading the view.
     }
+//        override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+//        {
+//            if segue.destination is MainViewController
+//            {
+//                let vc = segue.destination as? MainViewController
+//                vc?.username =  user
+//            }
+//        }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-//    var ref: DatabaseReference!
-//    
-//    ref = Database.database().reference()
     
     @IBAction func logoutButtonPressed(_ sender: Any) {
         do {
@@ -39,16 +45,6 @@ class MainViewController: UIViewController {
         let initial = storyboard.instantiateInitialViewController()
         UIApplication.shared.keyWindow?.rootViewController = initial
     
-//        do {
-//            try Auth.auth().signOut()
-//        } catch  {
-//            print("There was a problem signing out.")
-//        }
-//        guard(navigationController?.popToRootViewController(animated: true)) != nil
-//        else {
-//            print("You are signed out.")
-//            return;
-//        }
     }
     
    
