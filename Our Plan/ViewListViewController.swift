@@ -23,8 +23,14 @@ class ViewListViewController: UIViewController, UITableViewDelegate, UITableView
     
     
     // Created a docRef. This docRef accesses the database and is set to stores(collection) and document(list)
-//    var docRef: DocumentReference!
+    var docRef: DocumentReference!
     let db = Firestore.firestore()
+    
+    
+    
+    
+    
+    
     
     
 //    // View list
@@ -63,21 +69,9 @@ class ViewListViewController: UIViewController, UITableViewDelegate, UITableView
 
         
         
-        // error I can't fixsuper.viewDidLoad()
-//        db.document("stores").collection("82sPUkwkDF0f7Gf6d9Zx").getDocuments { (document, error) in
-//
-//            // check for error
-//            if error == nil {
-//                // check if document exists
-//                if document != nil && document!.exists {
-//                    let documentData = document!.data()
-//                }
-//            }
-//        }
         
         
-        
-//        docRef = Firestore.firestore().collection("stores").document("82sPUkwkDF0f7Gf6d9Zx")
+        docRef = Firestore.firestore().collection("stores").document(finalLabel)
         
 //        docRef.getDocument { (document, error) in
 //            if let document = document, document.exists {
@@ -113,32 +107,55 @@ class ViewListViewController: UIViewController, UITableViewDelegate, UITableView
                 
 
         
-//        docRef.getDocument { (document, error) in
-//            if let document = document, document.exists {
-//                let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-//                list.append(dataDescription)
-//                self.input.text = "";
-//                self.myTableView.reloadData()
-//                //                print("Document data: \(dataDescription)")
-//            } else {
-//                print("Document does not exist")
-//
-//            }
-//        }
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                list.append(dataDescription)
+                self.addItem.text = "";
+                self.myTableView.reloadData()
+                                print("Document data: \(dataDescription)")
+            } else {
+                print("Document does not exist")
+
+            }
+        }
     }
     
     
     
-    @IBAction func addItemButton(_ sender: Any) {
-//        var item: Int
-//        item = 0
     
+    
+//    let washingtonRef = db.collection("cities").document("DC")
+    
+    // Atomically add a new region to the "regions" array field.
+//    washingtonRef.updateData([
+//    "regions": FieldValue.arrayUnion(["greater_virginia"])
+//    ])
+    
+    // Atomically remove a region from the "regions" array field.
+//    washingtonRef.updateData([
+//    "regions": FieldValue.arrayRemove(["east_coast"])
+//    ])
+    
+    
+    
+    
+    @IBAction func addItemButton(_ sender: Any) {
+        
         guard var inputItem = addItem.text, !inputItem.isEmpty else { return }
-
+        
         let db = Firestore.firestore()
+        
+        // Puts items in the list store 
         let newDocument = db.collection("stores").document(finalLabel)
-        newDocument.setData(["item": inputItem], merge: true)
-        inputItem = ""
+            newDocument.updateData([
+            "items": FieldValue.arrayUnion([inputItem])
+            ])
+        
+        
+//        newDocument.setData(["item": inputItem], merge: true)
+        addItem.text = ""
+        self.myTableView.reloadData()
     }
 
 
@@ -154,7 +171,8 @@ class ViewListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
             list.remove(at: indexPath.row)
-            myTableView.reloadData()
+//            myTableView.reloadData()
+//            DispatchQueue.main.async { self.myTableView.reloadData() }
         }
     }
     
